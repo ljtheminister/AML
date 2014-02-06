@@ -53,11 +53,43 @@ $ 2x_1^* - 4 = 0, 4x_2^* = 0 \Rightarrow x^* = (2,0)$. \\
 
 
 \item[(b)] $f(x)=e^{-\norm{x}^2}$
-\item[(c)] $f(x)=x_1^2-2x_1x_2+\frac{1}{3}x_2^3-4x_2$
-\item[(d)] $f(x)=(2x_1-x_2)^2+(x_2-x_3)^2+(x_3-1)^2$
-\item[(e)] $f(x)=x_1^4+16x_1x_2+x_2^8$
+\item[(c)] $f(x)=x_1^2-2x_1x_2+\frac{1}{3}x_2^3-4x_2$ \\
+
+\noindent
+Solution:\\
+$\frac{\partial f}{\partial x_1} = 2x_1 - x_2 := 0 \Rightarrow x_2 = 2x_1 \\
+\frac{\partial f}{\partial x_2} = -x_1 + x_2^2 - 4 := 0 \Rightarrow 4x_1^2 - x_1 - 4 = 0 \Rightarrow x_1^* = \pm \frac{\sqrt{17}}{8}$
+
+$\frac{\partial^2 f}{\partial x_1^2} = 2, \frac{\partial^2 f}{\partial x_2^2} = 2x_2$ \\
+\noindent
+For our global minimum, we need $x_2 > 0$; hence, we choose $x^* = (\frac{\sqrt{17}}{8}, \frac{\sqrt{17}}{4})$.\\
+
+\item[(d)] $f(x)=(2x_1-x_2)^2+(x_2-x_3)^2+(x_3-1)^2$\\
+
+\noindent
+Solution:\\
+$f(x) = 4x_1^2 - 4x_1x_2 + 2x_2^2 - 2x_2x_3 + 2x_3^2 - 2x_3 + 1\\
+\frac{\partial f}{\partial x_1} = 8x_1 - 4x_2 := 0 \Rightarrow 2x_1 = x_2\\
+\frac{\partial f}{\partial x_2} = -4x_1 + 4x_2 - x_3 := 0 \Rightarrow 2x_2 - x_3 = 0 \Rightarrow 2x_2 = x_3\\
+\frac{\partial f}{\partial x_3} = -2x_2 + 4x_3 - 2 :=0 \Rightarrow 3x_3 - 2 = 0 \Rightarrow x_3 = \frac{2}{3} \\
+\frac{\partial^2 f}{\partial x_1^2} = 8, \frac{\partial^2 f}{\partial x_2^2} = 4, \frac{\partial^2 f}{\partial x_3^2} = 4 \\
+x^* = (\frac{1}{6}, \frac{1}{3}, \frac{2}{3})$ \\
+
+
+
+
+\item[(e)] $f(x)=x_1^4+16x_1x_2+x_2^8$ \\
+
+
+
 \item[(f)] $f(x)=\sum_{j=1}^{n-1} 10^j(x_j-x_{j+1}^2)^2$ 
-(The Rosenbrock function)
+(The Rosenbrock function) \\
+
+\noindent
+Solution:\\
+Since this function is a sum of squares, the global minimum is 0.  In this case, we see that if $x^* = (c, c, \ldots, c)$, for $c \in \mathbb{R}$ such that $x_i = c$ for $i = 1, \ldots, n$, then, we are at a global min.\\
+
+
 \end{enumerate}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
