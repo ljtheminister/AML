@@ -1,11 +1,7 @@
 \documentclass[12pt]{amsart}
 
 \pagestyle{empty}
-\textwidth 7.5in
-\textheight 9in
-\oddsidemargin -0.3in
-\evensidemargin -0.2in
-\topmargin -0.2in
+\usepackage[margin=1.0in]{geometry}
 
 \newcommand{\norm}[1]{\Vert #1 \Vert}
 \newcommand{\Rn}{\R^n}
@@ -92,7 +88,7 @@ Solve the partial equations and $x^* = (-2^\frac{3}{4}, 2^\frac{1}{4})$. \\
 
 \noindent
 Solution:\\
-Since this function is a sum of squares, the global minimum is 0.  In this case, we see that if $x^* = (c, c^{1/2}, \ldots, c^{1/{2^{n-1}}})$, for $c \in \mathbb{R}$ such that $x_i = c^{1/{2^{i-1}}}$ for $i = 1, \ldots, n$, then, we are at a global min.\\
+Since this function is a sum of squares, the global minimum is 0.  In this case, we see that if $x^* = (c, c^{1/2}, \ldots, c^{1/{2^{n-1}}})$, for $c \geq 0$ such that $x_i = c^{1/{2^{i-1}}}$ for $i = 1, \ldots, n$, then, we are at a global min.\\
 
 
 \end{enumerate}
@@ -142,6 +138,9 @@ $\grad f(x) = f(x) \cdot [x_1, x_2, \ldots, x_n]^{-1} = x_1x_2x_3\cdots x_n \cdo
 
 \item[(f)] $f(x)=-\log(x_1x_2x_3\cdots x_n)$ for $x_j>0,\ j=1,\dots n$.\\
 
+\noindent
+Solution:\\
+$\grad f(x) $\\
 
 \end{enumerate}
 
@@ -181,28 +180,68 @@ Compute the Hessian of the functions given in problem (2) above.
 \begin{enumerate}
 \item[(a)] $f(x)=x_1^3+x_2^3-3x_1-15x_2+25 $\\
 
-$\grad^2 f(x) = $ \\
+\noindent
+Solution:\\
+$\grad^2 f(x) = 
+\begin{bmatrix}
+6x_1 & 0\\
+0 	 & 6x_2
+\end{bmatrix}
+$ \\
 
 \item[(b)] $f(x)=x_1^2+x_2^2-\sin(x_1x_2)$ \\
 
-$\grad^2 f(x)$ \\
+\noindent
+Solution:\\
+$\grad^2 f(x)= 
+\begin{bmatrix}
+2 + sin(x_1 x_2) \cdot x_2^2 & sin(x_1 x_2) \cdot x_1 x_2 - cos(x_1 x_2)\\
+sin(x_1 x_2) \cdot x_1 x_2 - cos(x_1 \cdot x_2) & 2 + cos(x_1 x_2) \cdot x_1^2
+\end{bmatrix}
+$ \\
 
 \item[(c)] $f(x)=\norm{x}^2=\sum_{j=1}^nx_j^2$\\
 
-$\grad^2 f(x) $\\
+\noindent
+Solution:\\
+$\grad^2 f(x) = 2 \cdot \exp\{\displaystyle \sum_{j=1}^n x_j^2 \}
+\begin{bmatrix}
+2 & & & \\
+& 2 & & \\
+& & \ddots & \\
+& & & 2\\
+\end{bmatrix} $\\
 
 \item[(d)] $f(x)=\displaystyle e^{\norm{x}^2}$\\
 
-$\grad^2 f(x)$\\
+\noindent
+Solution:\\
+$\grad^2 f(x) = 
+\begin{bmatrix}
+x_1^2 + 1 & 2x_1 x_2 & &\\
+		  & x_2^2 + 1 & &\\
+& & \ddots & \\
+& & & \ddots \\
+& & & x_n^2 + 1
+\end{bmatrix}
+$\\
 
 
 \item[(e)] $f(x)=x_1x_2x_3\cdots x_n $ \\
 
-$\grad^2 f(x) = $\\
+\noindent
+Solution:\\
+$\grad^2 f(x) = 
+\begin{bmatrix}
+
+\end{bmatrix}
+$\\
 
 \item[(f)] $f(x)=-\log(x_1x_2x_3\cdots x_n)$ for $x_j>0,\ j=1,\dots n$.\\
 
-$\grad^2 f(x) =$
+\noindent
+Solution:\\
+$\grad^2 f(x) =$\\
 \end{enumerate}
 
 
@@ -326,12 +365,32 @@ $$
 $$
 \begin{enumerate}
 \item
-Show that $\phi$ is a convex function.
+Show that $\phi$ is a convex function. \\
+
+\noindent
+Solution:\\
+The log function is concave, hence, the - log function is convex.  The sum of convex functions are convex. \\
+$\grad_x \phi = -\frac{1}{x_i} = - x_i^{-1} \\
+\grad_x^2 \phi = \text{ diag}(x_i^2)^{-1}$.\\
+Clearly, positive definite as $x_i > 0$.  \\
+
 \item
-Show that both $f$ and $f_t$ are convex functions.
+Show that both $f$ and $f_t$ are convex functions. \\
+
+\noindent
+Solution:\\
+$\grad f(x) = Qx \\
+\grad^2 f(x) = Q$, which is P.S.D. $\Rightarrow x^\top Qx$ is convex, $-c^\top x$ is linear, hence, convex. \\
+f is convex, $\phi$ is convex $\Rightarrow f_t$ convex. \\
+
 \item
 Show that the solution to the problem $\min f_t(x)$ always
-exists and is unique.
+exists and is unique. \\
+
+$\grad^2 f_t = \grad^2 f + \grad^2 \phi$ is strictly positive definite since $\grad_x^2 \phi$ is positive and $\grad^2 f = Q$ is semi-positive definite.\\
+$\Rightarrow f_t$ is strictly convex.  \\
+Hence, if the solution exists, then it is unique (and a solution exists, trivially). \\ 
+
 \end{enumerate}
 
 
@@ -351,19 +410,41 @@ f^*(y) = \sup_x x^Ty - f(x).
 Compute the conjugates of the following functions. 
 \begin{enumerate}
 
-\item $f(x) = \delta(x|C)$, where $C$ is a convex set.  
+\item $f(x) = \delta(x|C)$, where $C$ is a convex set.  \\
 
-\item $f(x) = 3x^2 - 2x$ 
+\noindent
+Solution:\\
+$f^*(x) = \displaystyle \sup_x x^\top y - \delta(x|C) = \sup_{x \in C} x^\top y$ \\
 
-\item $f(x) = x\log x$
+\item $f(x) = 3x^2 - 2x$ \\
 
-\item $f(x) = \log(1 + e^x)$
+\noindent
+Solution:\\
+$\frac{\partial f}{\partial x} = 0: y - 6\bar{x} + 2 = 0 \Rightarrow \bar{x} = \frac{1}{6} (y+2)$
+\begin{align*}
+f^*(y) &= \frac{1}{6}(y+2)y - \frac{1}{12}(y^2 + 4y + 4) + \frac{1}{3}y + \frac{2}{3}\\
+         &= \frac{1}{12}(y^2 + 4y + 4) \\
+	 &= \frac{1}{12} (y+2)^2
+\end{align*}
 
-\item $f(x) = e^{-2x}$.
+\item $f(x) = x\log x$\\
 
-\item $f(x) = \max_{1, \dots, n} x_i$ . 
+\noindent
+Solution:\\
+$\frac{\partial f}{\partial x} = 0: y - log \bar{x} - 1 = 0 \Leftrightarrow log \bar{x} = y-1 \Leftrightarrow \bar{x} = \exp\{y-1\}$\\
+\begin{align*}
+f^*(y) &= \sup_x <x,y> - x log x \\
+         &= y \cdot \exp\{y-1\} - (y-1) \exp\{y-1\} \\
+	 &= \exp\{y-1\}
+\end{align*}
 
-\item $f(x) = x^p$ for $x > 0$ and $p > 1$. 
+\item $f(x) = \log(1 + e^x)$\\
+
+\item $f(x) = e^{-2x}$.\\
+
+\item $f(x) = \max_{1, \dots, n} x_i$. \\
+
+\item $f(x) = x^p$ for $x > 0$ and $p > 1$. \\
 
 \end{enumerate}
 
@@ -371,13 +452,37 @@ Compute the conjugates of the following functions.
 
 \begin{enumerate}
 
-\item Define $g(x) = f(x) + c^Tx + d$, where $f$ is convex. Express $g^*$ in terms of $f^*$, $c$, and $d$. 
+\item Define $g(x) = f(x) + c^Tx + d$, where $f$ is convex. Express $g^*$ in terms of $f^*$, $c$, and $d$. \\
 
-\item Define $g(x) = f(Qx + b)$, $Q$ an invertible matrix, and $b$ a vector. Compute $f^*$ in terms of $g^*$, $Q$, and $b$.
+\noindent
+Solution:
+\begin{align*}
+g^*(y) &= \sup_x x^\top y - f(x) - c^\top x - d \\
+          &= \sup_x \{x^\top y - f(x) - c^\top x\} -d\\
+	  &= \sup_x \{<x, y-c> - f(x)\} - d\\
+          &= f^*(y-c) -d \\
+\end{align*}
 
-\item Let $f(x,z)$ be convex in $(x,z)$ and define $g(z) = \inf_z f(x,z)$. Express $g^*$ in terms of $f^*$.
+\item Define $g(x) = f(Qx + b)$, $Q$ an invertible matrix, and $b$ a vector. Compute $f^*$ in terms of $g^*$, $Q$, and $b$.\\
 
+\noindent
+Solution:\\
+Let $u = Qx + b$.  $x = Q^{-1}(u-b)$.
+\begin{align*}
+g^*(y) &= \sup_u <u, Q^{-\top} y> - f(u) - b^\top Q^{-\top} y\\
+          &= f^*(Q^{-\top}y) - (Q^{-1} b)^\top y
+\end{align*}
 
+\item Let $f(x,z)$ be convex in $(x,z)$ and define $g(z) = \inf_z f(x,z)$. Express $g^*$ in terms of $f^*$.\\
+
+\noindent
+Solution:\\
+\begin{align*}
+g^*(y) &= \sup_x <x,y> - \inf_z f(x,z)\\
+          &= \sup_{x,z} \{<x,z> - f(x,z)\}\\
+	  &= \sup_z \{sup_x <x,y> - f(x,z)\}\\
+          &= \sup_z f^*(y)
+\end{align*}
 \end{enumerate}
 
 
