@@ -480,7 +480,7 @@ Solution:\\
 \begin{align*}
 g^*(y) &= \sup_x <x,y> - \inf_z f(x,z)\\
           &= \sup_{x,z} \{<x,z> - f(x,z)\}\\
-	  &= \sup_z \{sup_x <x,y> - f(x,z)\}\\
+	  &= \sup_z \{\sup_x <x,y> - f(x,z)\}\\
           &= \sup_z f^*(y)
 \end{align*}
 \end{enumerate}
@@ -498,7 +498,15 @@ g^*(y) &= \sup_x <x,y> - \inf_z f(x,z)\\
 are related by $\bar y = \nabla f(\bar x)$, and that the hessian $\nabla^2 f(\bar x)$ is positive definite. 
 
 \begin{enumerate}
-\item  Show that $\nabla f^* (\bar y) = \bar x$. 
+\item  Show that $\nabla f^* (\bar y) = \bar x$. \\
+
+\noindent
+Solution:\\
+$f^*(\bar y) = \displaystyle \sup_x x^\top \bar y - f(x)\\
+\frac{\partial f^*}{\partial x} = 0 : \bar y - f'(x) = 0 \Rightarrow \bar y = \grad f(x^*) = \grad f(\bar x) \Rightarrow x^* = \bar x $\\
+
+Therefore, $f^*(\bar y) = \displaystyle \sup_x \bar x^\top \bar y - f(\bar x)$.\\
+Differentiate w.r.t. $\bar y$ and we get $\grad f^*(\bar y) = \bar x$.\\
 
 \item Show that $\nabla^2 f^* (\bar y) = \nabla^2 f(\bar x)^{-1}$.
 
