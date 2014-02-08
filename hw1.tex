@@ -48,7 +48,11 @@ $\frac{\partial^2 f}{\partial x_1^2} = 2, \frac{\partial^2 f}{\partial x_1^2}$ \
 $ 2x_1^* - 4 = 0, 4x_2^* = 0 \Rightarrow x^* = (2,0)$. \\
 
 
-\item[(b)] $f(x)=e^{-\norm{x}^2}$
+\item[(b)] $f(x)=e^{-\norm{x}^2}$ \\
+
+Solution:\\
+A global minimizer does not exist as this function is concave and for $x^*: \grad f(x^*) = 0$, we are at a global maximum ($f''(0) < 0$).\\
+
 \item[(c)] $f(x)=x_1^2-2x_1x_2+\frac{1}{3}x_2^3-4x_2$ \\
 
 \noindent
@@ -140,7 +144,9 @@ $\grad f(x) = f(x) \cdot [x_1, x_2, \ldots, x_n]^{-1} = x_1x_2x_3\cdots x_n \cdo
 
 \noindent
 Solution:\\
-$\grad f(x) $\\
+$\grad f(x)$ is a vector of the following partial: \\
+$\displaystyle \frac{\partial f}{\partial x_i} = \frac{-1}{log (\prod_i x_i)} \cdot \prod_{i \neq j} (x_i)$\\
+$\displaystyle \grad f(x) = [\frac{-1}{log (\prod_i x_i)} \cdot \prod_{i \neq 1} (x_i), \ldots, \frac{-1}{log (\prod_i x_i)} \cdot \prod_{i \neq n} (x_i)]$\\
 
 \end{enumerate}
 
@@ -204,7 +210,7 @@ $ \\
 
 \noindent
 Solution:\\
-$\grad^2 f(x) = 2 \cdot \exp\{\displaystyle \sum_{j=1}^n x_j^2 \}
+$\grad^2 f(x) = 2 \cdot \text{diag}(e) = 
 \begin{bmatrix}
 2 & & & \\
 & 2 & & \\
@@ -216,14 +222,7 @@ $\grad^2 f(x) = 2 \cdot \exp\{\displaystyle \sum_{j=1}^n x_j^2 \}
 
 \noindent
 Solution:\\
-$\grad^2 f(x) = 
-\begin{bmatrix}
-x_1^2 + 1 & 2x_1 x_2 & &\\
-		  & x_2^2 + 1 & &\\
-& & \ddots & \\
-& & & \ddots \\
-& & & x_n^2 + 1
-\end{bmatrix}
+$\grad^2 f(x) =  4 \cdot \exp\{\displaystyle \sum_{j=1}^n x_j^2 \} \cdot x^\top x
 $\\
 
 
@@ -231,22 +230,17 @@ $\\
 
 \noindent
 Solution:\\
-$\grad^2 f(x) = 
-\begin{bmatrix}
-
-\end{bmatrix}
+$\displaystyle \grad^2 f(x) = \frac{f(x)}{x^\top x}
 $\\
 
 \item[(f)] $f(x)=-\log(x_1x_2x_3\cdots x_n)$ for $x_j>0,\ j=1,\dots n$.\\
 
 \noindent
 Solution:\\
-$\grad^2 f(x) =$\\
+$\displaystyle \frac{\partial f}{\partial x_i} = \frac{-1}{\prod_i x_i} \prod_{i \neq j} x_i = -\frac{1}{x_i} \\
+\grad^2 f(x) = \text{diag}(x_i^{-2})$\\
 \end{enumerate}
 
-
-
-\newpage
 
 \noindent
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -256,16 +250,56 @@ $\grad^2 f(x) =$\\
 \item
 Show that each of the following functions is convex.
 \begin{enumerate}
-\item $f(x) = \begin{cases} 12 &\text{if}  \quad \|Ax - b\|_1 \leq \pi \\ \infty & \text{otherwise}\end{cases}$
+\item $f(x) = \begin{cases} 12 &\text{if}  \quad \|Ax - b\|_1 \leq \pi \\ \infty & \text{otherwise}\end{cases}$\\
+
+\noindent
+Solution:\\
+$f(x) = 12 + \delta(x|C)$ where $C = \{x: \norm{Ax-b}_1 \leq \pi\}$.\\
+As stated in the notes, all norms can be written as support functions and thus, all norms are convex.  Thus, $C$ is convex and the convex indicator function is convex on a convex domain.\\
 
 \item
-$f(x)=e^{-x}$
+$f(x)=e^{-x}$ \\
+
+Solution:\\
+$f$ is a twice differentiable continuous function\\ 
+$f'(x) = -e^{-x}\\
+f''(x) = e^{-x} > 0 \; \forall x$. \\ 
+
 \item
-$f(x_1,x_2,\dots,x_n)=e^{-(x_1+x_2+\dots +x_n)}$
+$f(x_1,x_2,\dots,x_n)=e^{-(x_1+x_2+\dots +x_n)}$\\
+
+Solution:\\
+$f$ is again a twice differentiable continuous function.\\
+ $\grad f(x) = -f(x), \grad^2 f(x) = f(x)$.\\
+Since $f(x) > 0$, $f$ is clearly convex.\\
+
 \item
-$f(x)=\norm{x}$ (Show for any norm, don't assume this is a particular norm). 
+$f(x)=\norm{x}$ (Show for any norm, don't assume this is a particular norm).\\
+
+Solution:
+\begin{align*}
+f(\lambda x + (1-\lambda)y) &\leq f(\lambda x) + f((1-\lambda)y) \text{ (triangle inequality)}\\
+\\
+&= \lambda \cdot f(x) + (1-\lambda) \cdot f(y) \text{ (homogeneity of norms)}
+\end{align*}
+
 \item 
-$f(x) = \log \left( \sum_i e^{x_i}\right)$
+$f(x) = \log \left( \sum_i e^{x_i}\right)$\\
+
+\noindent
+Solution:\\
+$ \displaystyle \frac{ \partial f}{\partial x_i} = \frac{e^{x_i}}{\sum_i e^{x_i}}\\
+\displaystyle \frac{\partial^2 f}{\partial x_i ^2} = e^{x_i}e^{x_j}( \sum_k e^{x_k})^{-2}  \\
+\grad f(x) = \frac{1}{e^\top z} \text{diag}(z)$ where $ z = e^X (z_i = e^{x_i})$.\\
+
+$\grad^2 f(x) = \frac{1}{e^\top z} \text{diag}(z) - \frac{1}{(e^\top z)^2} z z^\top$. \\
+
+We need to show that $\grad^2 f(x)$ is semi-positive definite:\\
+\begin{align*}
+x^\top \grad^2_f x &= \frac{1}{e^\top z} [x^\top \text{diag}(z) x \cdot e^\top z - (z^\top x)^\top)(z^\top x)] \\
+\displaystyle &= \frac{1}{e^\top z} [(\sum_i x_i^2z_i) \cdot (\sum_i z_i) - (\sum_i x_i z_i)^2]
+\end{align*}
+The denominator is clearly positive and by Cauchy-Schwarz, it is clear that the numerator is non-negative.  Hence, the Hessian is S.P.D.\\
 \end{enumerate}
 
 \item
@@ -342,11 +376,22 @@ Solution: \\
 $ \forall z \in \mathbb{R}^n, z^\top \grad^2 f z = z^\top A^\top A z = (Az)^\top (Az) = \norm{Az}^2_2 \geq 0$.  \\
 Hence, Q is P.S.D.  \\
 
-\item$^*$ Show that a solution to (lls) must always exist.
+\item$^*$ Show that a solution to (lls) must always exist.\\
+
+\noindent
+Solution:\\
+$\grad f(x)=0: A^\top Ax = A^\top b$. \\
+Since $A$ is a square, symmetric matrix, rank($A^\top A)=$ rank($A$) = rank($A^\top$).  Therefore, we can find a solution to the system (lls).\\
+
 \item$^*$ Provide a necessary and sufficient condition on the matrix
 $A$ ({\bf not on the matrix $A^TA$}) under which (lls)
 has a unique solution and then display this solution in terms
-of the data $A$ and $b$.
+of the data $A$ and $b$.\\
+
+Solution:\\
+A unique solution exists if and only if $A^\top Ax = A^\top b$ is unique.  We need $x^* = (A^\top A)^{-1} A^\top b$,with $A^\top A$ nonsingular.  When $Q = A^\top A$ is nonsingular, hence, invertible, $\displaystyle \norm{Q^{-1}} = \{\min_{\norm{x}_2=1}  \norm{Ax}_2\}^{-1} =  \frac{1}{\sqrt{\lambda_{\min}}}$ where $\lambda_{\min}$ is the smallest eigenvalue of $A^\top A$.  Clearly, $\lambda_{\min} > 0$ for nonsingularity.  Hence, for A, where $v_{\min}$ is the smallest eigenvalue of A, we need $v_{\min} = (\lambda_{\min})^{1/2}) > 0$.  More simply, $A$ should be a full rank matrix.\\
+
+
 \end{enumerate}
 \item
 Consider the functions
@@ -387,10 +432,9 @@ f is convex, $\phi$ is convex $\Rightarrow f_t$ convex. \\
 Show that the solution to the problem $\min f_t(x)$ always
 exists and is unique. \\
 
-$\grad^2 f_t = \grad^2 f + \grad^2 \phi$ is strictly positive definite since $\grad_x^2 \phi$ is positive and $\grad^2 f = Q$ is semi-positive definite.\\
+$\grad^2 f_t = \grad^2 f + \grad^2 \phi$ is symmetric and positive definite since $\grad_x^2 \phi$ is symmetric and positive definite and $\grad^2 f = Q$ is symmetric semi-positive definite.\\
 $\Rightarrow f_t$ is strictly convex.  \\
-Hence, if the solution exists, then it is unique (and a solution exists, trivially). \\ 
-
+Therefore, a solution exists and is unique.\\
 \end{enumerate}
 
 
@@ -414,7 +458,7 @@ Compute the conjugates of the following functions.
 
 \noindent
 Solution:\\
-$f^*(x) = \displaystyle \sup_x x^\top y - \delta(x|C) = \sup_{x \in C} x^\top y$ \\
+$f^*(x) = \displaystyle \sup_x x^\top y - \delta(x|C) = \sup_{x \in C} x^\top y$ the support function of C. \\
 
 \item $f(x) = 3x^2 - 2x$ \\
 
@@ -431,21 +475,68 @@ f^*(y) &= \frac{1}{6}(y+2)y - \frac{1}{12}(y^2 + 4y + 4) + \frac{1}{3}y + \frac{
 
 \noindent
 Solution:\\
-$\frac{\partial f}{\partial x} = 0: y - log \bar{x} - 1 = 0 \Leftrightarrow log \bar{x} = y-1 \Leftrightarrow \bar{x} = \exp\{y-1\}$\\
+$\frac{\partial f}{\partial x} = 0: y - \log \bar{x} - 1 = 0 \Leftrightarrow \log \bar{x} = y-1 \Leftrightarrow \bar{x} = \exp\{y-1\}$\\
 \begin{align*}
-f^*(y) &= \sup_x <x,y> - x log x \\
+f^*(y) &= \sup_x <x,y> - x \log x \\
          &= y \cdot \exp\{y-1\} - (y-1) \exp\{y-1\} \\
 	 &= \exp\{y-1\}
 \end{align*}
 
 \item $f(x) = \log(1 + e^x)$\\
 
+\noindent
+Solution:\\
+$\displaystyle f^*(y) = \sup_x x^\top y - \log(1 + e^x) \\
+\text{Differentiate: } (f^*)' = 0: y - \frac{e^x}{1 + e^x} = 0\\
+x^* = - \log(\frac{1}{y} - 1)\\
+\Rightarrow f^*(y) = - y \log(\frac{1}{y} - 1) - \log(\frac{2y-1}{1-y})$\\
+
 \item $f(x) = e^{-2x}$.\\
+
+\noindent
+Solution:\\
+$\displaystyle f^*(y) = \sup_x x^\top y - e^{-x} \\
+\text{Differentiate: } (f^*)' = 0: y + e^{-x} = 0 \Rightarrow e^{-x} = -y \Rightarrow x^* = \log (y)$ for $y > 0$.\\
+\begin{equation*}
+f^*(y) = \begin{cases}
+y \log y - e^{- \log(y)} = y \log y - \frac{1}{y},& \text{for $y > 0$}\\
+0, & \text{otherwise}\\
+	\end{cases}
+\end{equation*}
 
 \item $f(x) = \max_{1, \dots, n} x_i$. \\
 
+
+\noindent
+Solution:\\
+\begin{equation*}
+f^*(x) = \begin{cases}
+0, & \text{ if $y>0$ and $\norm{y} \leq 1$}\\
+\infty, & \text{otherwise}
+\end{cases}
+\end{equation*}
+
+If $y \leq 0$, we can choose an arbitrarily large $x_i$.  The only way this conjugate function is bounded is if the norm of $y$ is bounded to be at most that of a unit vector.  When $ \norm y =1$, $\displaystyle \sum_i x_i \cdot y_i \leq \max_i x_i$ holds in equality.\\
+
+
 \item $f(x) = x^p$ for $x > 0$ and $p > 1$. \\
 
+Solution:\\
+$ \displaystyle
+f^*(y) = \sup_x x^\top y - x^p$\\
+Differentiate $(f^*)' = 0: y - p \bar x^{p-1} = 0 \Rightarrow \bar x = [\frac{y}{p}]^{1/(p-1)}$\\
+Substitute $\bar x$ in for y:
+\begin{align*}
+y \cdot (\frac{y}{p})^{1/(p-1)} - (\frac{y}{p})^{p/(p-1)} \\
+[p-1](\frac{y}{p})^{p/(p-1)} \text{for $y > 0$}
+\end{align*}
+
+\begin{equation*}
+f^*(y) = \begin{cases}
+[p-1](\frac{y}{p})^{p/(p-1)} ,& \text{for $y>0$}\\
+0 ,& \text{otherwise}
+\end{cases}
+\end{equation*}
 \end{enumerate}
 
 \item Conjugates in terms of other conjugates
@@ -482,16 +573,27 @@ g^*(y) &= \sup_x <x,y> - \inf_z f(x,z)\\
           &= \sup_{x,z} \{<x,z> - f(x,z)\}\\
 	  &= \sup_z \{\sup_x <x,y> - f(x,z)\}\\
           &= \sup_z f^*(y)
-\end{align*}
+\end{align*}\\
 \end{enumerate}
 
 
 
-\item Suppose that $f: \mathbb{R}^n \rightarrow \mathbb{R}$ is convex, and bounded above on $\mathbb{R}^n$. Show that $f$ is constant. 
+\item Suppose that $f: \mathbb{R}^n \rightarrow \mathbb{R}$ is convex, and bounded above on $\mathbb{R}^n$. Show that $f$ is constant. \\
 
+\noindent
+Solution:\\
+Suppose $f$ is not constant.  Then, $\exists x,y,$ s.t. $f(x) > f(y).$\\
+$f(\lambda(x) + (1-\lambda)y) \leq \lambda \cdot f(x) + (1-\lambda) \cdot f(y)$.\\
+Let $z = \lambda \cdot x + (1-\lambda) \cdot y$\\
+By convexity, $\displaystyle \frac{f(z) - (1-\lambda) \cdot f(y)}{\lambda} \leq f(x)$ where $\lambda \in [0,1]$. \\
 
-\vspace{2in}
+\noindent
+$\displaystyle \frac{f(z) - (1-\lambda) \cdot f(y)}{\lambda} = \frac{f(z)-f(y)}{\lambda} + f(y) \leq f(x)$. \\
 
+\noindent
+As $\lambda \rightarrow 0^+$, the first term blows up and it is clear that $f(x)$ is unbounded.\\
+
+\noindent
 {\bf Bonus: Don't work on this problem until you are done with the others. }
 
 \item Suppose $f: \mathbb{R}^n \rightarrow \mathbb{R}$ is convex and twice continuously differentiable. Suppose that $\bar y$ and $\bar x$ 
