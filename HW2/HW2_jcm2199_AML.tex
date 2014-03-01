@@ -59,16 +59,24 @@ Consider a ridge regularized logistic regression problem, where we impose a 2-no
 \noindent
 Given a primal in the form of $\min_x c^\top x + k(x) + h(b-Ax)$, the dual is given by $\max b^\top z - h^*(z) - k*(A*z - c)$ where $f*(x)$ is the convex conjugate of $f$ which is $f^*(x) = \sup_x y^\top x - f(x)$. \\
 
-Define $h(v) = \sum_{i=1}^d \log(1+\exp(v_i))$. \\
-Define $A$ such that each row, $A_i = y_i x_i^\top$.  Hence, $h(A\theta) = \sum_{i=1}^T \log(1 + exp(-\tilde x^\top \theta))$.\\
-$k$ represents our constraint function by setting $k = \delta $ the 2-ball.
+$b=0, c=0, x = \theta, h(v) = \sum_{t=1}^T \log(1+\exp(v_i))$. \\ 
+Define matrix A with rows $A_t = y_t x_t^\top = \tilde x_t^\top$.  Hence, $h(A\theta) = \sum_{t=1}^T \log(1 + exp(-\tilde A_t^\top \theta))$.\\
+$k$ represents our constraint function by setting $k = \delta(x|x\in \mathcal{B}_2(\tau)$.\\ 
+
+The convex conjugate of the logistic loss function, where $f(x) = \ln(1+e^{-x})$, can be written as $f^*(y) = -y \ln(-y) + (1+y)\ln(1+y)$ computed from using $\sigma^{-1}$, the inverse sigmoid function $(x = -ln(\frac{1-y}{y})$.\\
+
+The convex conjugate of the indicator function is the support function: $k^*(x) = \sup_y y\top x$.
+
+\noindent
+Hence, the dual looks as follows:\\
+$\displaystyle \max_{x,y} -y \ln(-y_i) + (1+y)\ln(1+y) - x^\top (A^\top y - c)$ s.t. $x \in \mathbb{B}(\tau)_2$\\
 
 
 \item  What is the dimension of the dual variable? Briefly discuss the merits of the primal vs. dual 
 formulations from the point of view of algorithmic development. \\
 
 \noindent 
-$y \in \mathcal{R}^T$. Depending on the dimension of the data and problem formulation, optimizing over the dual would benefit computational efficiency when there are less parameters(unknowns) to compute compared to the primal.
+$y \in \mathbb{R}^T$. Depending on the dimension of the data and problem formulation, optimizing over the dual would benefit computational efficiency when there are less parameters(unknowns) to compute compared to the primal.\\
 
 
 \item  If instead of $\|\theta\|_2 \leq \tau$, we had decided to impose the constraint 
@@ -78,7 +86,11 @@ $y \in \mathcal{R}^T$. Depending on the dimension of the data and problem formul
  how does the dual change? \\\\
 
 \noindent
-As $k$ represented our previous constraint, our $k$ in the primal formulation is changing from a 2-ball to one where the $|\theta|_\inf \leq 1$.
+As $k$ represented our previous constraint, our $k$ in the primal formulation is changing from an indicator of a 2-ball to an inf-ball, $B_\infty$ to correspond to $\|\theta\|_\infty \leq 1$.
+
+
+$\displaystyle \max_{x,y} -y \ln(-y) + (1+y)\ln(1+y) - x^\top (A^\top y - c)$ s.t. $x \in \mathbb{B}(1)_\infty$ \\
+
 
 \end{enumerate}
 
@@ -161,6 +173,23 @@ iter 100
 
 \end{verbatim}
 
+FISTA with fixed-step size:\\
+Input: $L = L(f)$, where $L$ is a Lipschitz-constant of $\grad f$.\\
+Initialzize $y_1 = x_0$, $t_1 = 1$.
+For steps $k \geq 1$:
+    \indent
+    $x_k = P_L(y_k)$\\
+    \indent
+    $t_{k+1} = \frac{1 + \sqrt{1+4t_k^2}}{2}$\\
+    \indent
+    $y_{k+1} = x_k + \frac{t_k - 1}{t_{k+1}} (x_k - x_{k-1})$ \\
+
+$P_L(y) := \text{argmin } Q_L(x,y)$ where $Q_L(x,y) = f(y) + (x-y)^\top \grad f(y) + \frac{L}{2} \norm{x-y}^2 + g(x)$\\
+Note: $Q_L(x,y) = f(y) + (x-y)^\top \grad f(y) + L \cdot \text{prox }_g (y)$. \\
+
+
+
+
 
 \item Make a plot, comparing per-iteration progress of the two algorithms on the same problem. 
 The x-axis of your plot should be iteration number, and the y axis the value of the objective function. 
@@ -186,18 +215,17 @@ The Lagrangian for this problem is given by
 \begin{enumerate}
 \item Obtain the first-order necessary condition for a local minimum of $\mathcal L$ in $x$. \\
 
-$\frac{\partial \mathcal{L}}{\partial x} = \grad_x f(x) + \lambda^\top C = 0 \\
-\frac{\partial \mathcal{L}}{\partial s} = \lambda^\top \mathbbm{1}\{s \geq 0\} \\   
-\frac{\partial \mathcal{L}}{\partial \lambda} = Cx + s - c = 0 \\
+$\frac{\partial \mathcal{L}}{\partial x} = \grad_x f(x) + \lambda^\top C = 0 \Rightarrow \grad f(x) = -\lambda^\top C\\
+%\frac{\partial \mathcal{L}}{\partial \lambda} = Cx + s - c = 0 \\
 $
 
 \item Obtain the necessary condition for a local maximum of $\mathcal L$ in $\lambda$. \\
 
+$\frac{\partial \mathcal{L}}{\partial s} = \lambda^\top \cdot \mathbbm{1}\{s \geq 0\} = 0 $\\
+
 \item Argue that at any saddle point of $\mathcal L$, $\bar \lambda_i \bar s_i = 0$.  \\ 
 
-$\bar \lambda_i \bar s_i = 0    .$
-
-
+$\bar \lambda_i \bar s_i = 0 $ satisfies KKT's complementary slackness condition.  Saddle points satisfy KKT's first order necessary conditions and we see that this complementary slackness condition must hold when taking the partial of the Lagrangian with respect to $s$.  We arrive at a saddle point and not optimality because $f(x)$ is not necessarily convex. \\
 
 \item Now consider a log-barrier modified primal problem: 
 
