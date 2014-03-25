@@ -1,0 +1,76 @@
+\documentclass[a4, 10pt]{article}
+
+\usepackage[margin=1.0in]{geometry} %set margin to 1.0 inch
+\usepackage{graphicx, enumerate, amssymb, amsmath, amsmath, amstext, bbm}
+
+\title{Advanced Machine Learning}
+\author{John Min}
+
+\begin{document}
+\maketitle
+
+\section{Logistic Regression}
+
+Recall the Bernoulli random variable:  for $x \in \{0,1\}, \mu$ probability of heads: \\
+$$p(x|\mu) = \mu^x (1-\mu)^{1-x}$$
+$$p(x|\mu) = (1-\mu) \exp \bigg\{x \ln \Big( \frac{\mu}{1-\mu} \Big) \bigg\} $$    
+
+\noindent
+$\gamma = \text{logit}(\mu)$
+The inverse transform for the logit is the sigmoid: \\
+$$ \sigma(\gamma) = \frac{1}{1+ \exp(- \gamma)} $$
+
+	\subsection{Logistic Regression vs. Least Squares}
+
+\begin{itemize}
+	\item One can formulate LS classification, modeling each $C_k$ with its own linear mode, and minimizing the squared error between predicted and observed labels
+	\item However, LS is not robust with respect to outliers
+	\item Heavy tailed modeling?
+\end{itemize}
+
+\newpage
+
+\section{Neural Nets:  Data-Adaptive Learning}
+The limitation of the GLM modeling framework comes from its simplicity that facilitates model fitting.  The response is modeled as $y = \gamma (w^\top x) $ with $\gamma$ being some typically monotonic transformation.
+
+\begin{itemize}
+	\item logit/sigmoid (Bernoulli, Multinomial)
+	\item log/exp (Poisson)
+	\item $1/x$ (Gamma)
+\end{itemize} 
+
+\noindent \\
+\noindent
+Can we learn a more complex predictive mechanism?
+$$ y= f(x)$$
+
+\begin{itemize}
+	\item Parametric form:  formulate class of functions (e.g. polynomials, cubic splines) and learn their coefficients.
+	\item Non-parametric:  recover functions from inputs to outputs, penalizing complexity in functional representation.
+	\item Data-adapted:  formulate a mechanism, and learn the 'knobs' that configure it to input/output information (NN)
+\end{itemize}
+
+\subsection{Activation Functions}
+
+\subsubsection{Sigmoids}
+
+Sigmoids $\sigma(x) = \frac{1}{1 + exp(-\gamma x)}$ are widely used as activation functions:
+\begin{itemize}
+	\item Small $\gamma$ give linear-like activation, reducing the NN to a convex model
+	\item Large $\gamma$ gives a step-function, corresponding to the perceptron
+\end{itemize}
+
+\subsection{Training the NN}
+Given the input/output pair $(x, \bar y)$, the predicted output is $y = f(z)$, a  function of hidden units.  Training is performed using cross-entropy.\\
+
+$f(z) = 	\begin{bmatrix}
+		\sigma\Big( v_1^\top z - \xi_1 \Big) \\
+		\vdots \\
+		\sigma\Big( v_k^\top z - \xi_k \Big)
+		\end{bmatrix}$
+	
+We need to learn $V, \Xi$ by using the soft-max:
+$$ \displaystyle \min_{V, \xi} \ln \Bigg( \sum_{j=1}^k \exp \Big(v_j^\top z - \xi_j \Big) \Bigg) - \Big( v_p^\top z - \xi_p \Big) $$
+
+
+\end{document}
