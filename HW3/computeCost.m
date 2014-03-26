@@ -34,5 +34,27 @@ case 'class'
 		[~, valueOutput] = max(output, [], 2);
 		errors = ( valueOutput ~= labels*(1:nLabels)' );
 		if nargout > 1, error('This cost is not designed for training'); end
-	end
+    end
+
+case 'huber mse'
+    diff = output - labels;
+    delta = .25;
+    errors = sum(arrayfun(@Huber, diff));
+    gradient = delta*sign(diff)/nSamples;
+    
+case 'student mse'
+    v = 1; %degrees of freedom: n-1
+    diff = output - labels;
+    errors = .5*sum(log(v+diff.^2),2) + wdCost;
+    gradient = 2*(diff./(v+diff.^2))/nSamples;
+end
+end
+
+function [a] = Huber(a)
+    delta = .25;
+    if abs(a) <= delta
+        a = .5*a^2;
+    else
+        a = delta*(abs(a) - delta/2);
+    end
 end

@@ -19,7 +19,7 @@
 \newcommand{\tpose}[1]{#1^{\scriptscriptstyle T}}
 \newcommand{\indicator}[2]{\delta\left(#1 \mid #2 \right)}
 
-
+\usepackage{listings}
 \usepackage{color}
 \newcommand{\blue}[1]{\textcolor{blue}{#1}}
 \newcommand{\red}[1]{\textcolor{red}{#1}}
@@ -29,7 +29,7 @@
 \newcommand{\logit}{\mathrm{logit}}
 
 
-\usepackage{amsmath,epsfig,amssymb}
+\usepackage{amsmath,epsfig,amssymb, bbm, bbold}
 %\input{macros}
 %\input{macros2}
 
@@ -71,7 +71,7 @@ is always positive semidefinite. What is a simple condition on the data that gua
 \noindent
 Since $y_n \in \{0,1\}$, $y_n (1-y_n) \geq 0$.  The outerproduct, by definition, $\phi_n \phi_n^\top \geq 0$. \\
 Thus, H is positive semi-definite.\\
-If $0 < y_n < 1$, then, H would be positive definite. \\
+Since $0 < y_n < 1$, for H to be positive definite, we see that the nullspace of the outerproduct, $\phi_n \phi_n^\top$, must be null.  This occurs when the data is linearly independent and $X$, the data matrix is of full rank. \\
 
 \end{enumerate}
 
@@ -99,9 +99,13 @@ If you want to push the code with more layers, and larger layer sizes, you may w
 using our notes). \\
 
 \noindent
-A neural network with no hidden layer using the Negative Log-Likelihood loss is equivalent to the softmax loss of the multiclass logit.
+A neural network with no hidden layer using the Negative Log-Likelihood loss is equivalent to the softmax loss.  Thus, the net is equivalent to the multinomial logit. \\
 
-Softmax output\\
+\noindent
+$\displaystyle E(w) = -\sum_{n=1}^N \sum_{k=1}^K y_n^{(k)} \ln \hat{y}_n^{(k)}$ where $\hat{y}_n^{(k)} = \sigma(w^\top x)$.
+Set $\grad E(w) = 0$.  \\
+We achieve the softmax result. \\
+
 
 
 \item The three cost functions $\{$mse, ce,  nll$\}$ are options in the function \verb{computeCost.m{. 
@@ -118,9 +122,9 @@ Let $W$ be the weight decays cost, $\hat y$ be the  predicted output, $y$ label.
 \begin{itemize}
 \item MSE: $\displaystyle \frac{1}{2} \sum_{n=1}^N \sum_{k=1}^{K} \big(y_n^{(k)} - \hat{y}_n^{(k)} \big)^2 + W$ \\
 
-\item CE: $\displaystyle -\sum_{n=1}^N \sum_{k=1}^K \Big[ \hat{y}_n^{(k)}[y_n = k]  + \sigma\big(-\hat{y}_n^{(k)}\big) \Big]^2 + W$\
+\item CE: $\displaystyle -\sum_{n=1}^N \sum_{k=1}^K \Big[ \hat{y}_n^{(k)} \mathbb{1}[y_n = k] + \sigma\big(-\hat{y}_n^{(k)}\big) \Big]^2 + W$\
 
-\item NLL: $\displaystyle \sum_{n=1}^N \sum_{k=1}^K \Big[ -\log\Big( \text{softmax}(\hat{y}_n^{(k)} [y_n = k]) \Big)  \Big] + W$\\
+\item NLL: $\displaystyle \sum_{n=1}^N \sum_{k=1}^K \Big[ -\log\Big( \text{softmax}(\hat{y}_n^{(k)} \mathbb{1}[y_n = k]) \Big)  \Big] + W$\\
 
 \end{itemize} 
 
@@ -216,15 +220,15 @@ f(r) = \sum \ln(\nu + r_i^2)
  & MSE & huber MSE & student MSE \\ \hline
  \verb{params.Nh = [], 0% contaminated{  &21 \%&31.3\% & 27.5 \% \\ \hline
   \verb{params.Nh = [], 1% contaminated{  &20.6 &32 &31.05 \\ \hline
- \verb{params.Nh = [], 5% contaminated{  & 28.1& 33.35& \\ \hline
-  \verb{params.Nh = [], 10% contaminated{  & & 37.4&28.75 \\ \hline
- \verb{params.Nh = [], 25% contaminated{  & 30.45& 27.55
-& \\ \hline 
- \verb{params.Nh = 100, 0% contaminated{  &5.4 & 6.15& \\ \hline
-  \verb{params.Nh = 100, 1% contaminated{  & & & \\ \hline
- \verb{params.Nh = 100, 5% contaminated{  & & & \\ \hline
-  \verb{params.Nh = 100, 10% contaminated{  & & & \\ \hline
-  \verb{params.Nh = 100, 25% contaminated{  & & & \\ \hline
+ \verb{params.Nh = [], 5% contaminated{  &20.95& 28.1& 33.35 \\ \hline
+  \verb{params.Nh = [], 10% contaminated{  &21.05 & 37.4&28.75 \\ \hline
+ \verb{params.Nh = [], 25% contaminated{  &21.09&  30.45& 27.55
+ \\ \hline 
+ \verb{params.Nh = 100, 0% contaminated{  &5.4 & 6.15&8.65 \\ \hline
+  \verb{params.Nh = 100, 1% contaminated{  &5.9 &5.7 & 8.55 \\ \hline
+ \verb{params.Nh = 100, 5% contaminated{  &5.5 & 8.95&5.8 \\ \hline
+  \verb{params.Nh = 100, 10% contaminated{  &5.85 &9.75 &5.65 \\ \hline
+  \verb{params.Nh = 100, 25% contaminated{  &6.25 &14 &5.95 \\ \hline
 \end{tabular}\\\\
  
 
@@ -233,10 +237,11 @@ f(r) = \sum \ln(\nu + r_i^2)
 For the Huber loss, I chose $\delta = .25$.  For the student t, I decided on $\nu=1$.\\
 
 \noindent
-The robust measures, did not seem to help, but I did not sufficiently tune the parameters with respect to these alternative mean squared error formulations - whether it be the "delta" parameter for the Huber loss or the degrees of freedom $\nu$ parameter for the student t log-likelihood. \\
+As the contamination factor increased, the robust methods performed relatively better.
+Overall, the robust measures, did not seem to significantly help, but I did not thoroughly explore the parameter space with respect to these alternative mean squared error formulations - whether it be the "delta" parameter for the Huber loss or the degrees of freedom $\nu$ parameter for the student t log-likelihood. \\
 
 \noindent
-While more investigation needs to be done with regards to this experiment, it is evident that the MSE losses do not perform as well as the Cross-Entropy and Negative Log-Likelihood formulations.
+While more investigation needs to be done with regards to this experiment, it is evident that the MSE losses do not perform as well as the Cross-Entropy and Negative Log-Likelihood formulations of the losses.
 
 \end{enumerate}
 
@@ -245,5 +250,6 @@ While more investigation needs to be done with regards to this experiment, it is
 
 \end{enumerate}
 
+\lstinputlisting{computeCost.m}
 
 \end{document}
