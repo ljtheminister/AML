@@ -99,6 +99,8 @@ If you want to push the code with more layers, and larger layer sizes, you may w
 using our notes). \\
 
 \noindent
+A neural network with no hidden layer using the Negative Log-Likelihood loss is equivalent to the softmax loss of the multiclass logit.
+
 Softmax output\\
 
 
@@ -114,17 +116,18 @@ in \verb{computeCost{. {\it My advice is to not think look at their names, but j
 Let $W$ be the weight decays cost, $\hat y$ be the  predicted output, $y$ label.\\
 
 \begin{itemize}
-\item MSE: $\displaystyle \frac{1}{2} \sum_{n=1}^N \big(y_n - \hat{y}_n \big)^2 + W$ \\
+\item MSE: $\displaystyle \frac{1}{2} \sum_{n=1}^N \sum_{k=1}^{K} \big(y_n^{(k)} - \hat{y}_n^{(k)} \big)^2 + W$ \\
 
-\item CE: $\displaystyle -\sum_{n=1}^N \Big[ y_n \hat{y}_n + \sigma\big(-\hat{y}_n\big) \Big]^2 + W$\
+\item CE: $\displaystyle -\sum_{n=1}^N \sum_{k=1}^K \Big[ \hat{y}_n^{(k)}[y_n = k]  + \sigma\big(-\hat{y}_n^{(k)}\big) \Big]^2 + W$\
 
-\item NLL: $\displaystyle \sum_{n=1}^N \bigg[-\log\Big( \sigma(\hat{y}_n)_j \Big) y_n \bigg] + W$\\
+\item NLL: $\displaystyle \sum_{n=1}^N \sum_{k=1}^K \Big[ -\log\Big( \text{softmax}(\hat{y}_n^{(k)} [y_n = k]) \Big)  \Big] + W$\\
 
 \end{itemize} 
 
 \item Two of the three objectives should be familiar. What about the third? What is it trying to do? Do your best to give some intuition; 
 you will get credit as long as you show you seriously considered it. \\
 
+In class, we have discussed the mean squared error and negative log-likelihood loss functions.  Here, we are introduced to the cross-entropy loss function, which we can see to be quite similar to the negative log-likelihood.  What we can see is that the distinction between the CE and NLL loss functions is analogous to the slight difference between the sigmoid and softmax loss functions -- we can summarze the two different multinomial classification approaches to being one-vs-one and one-vs-rest, respectively, for the cross-entropy and negative log-likelihood objective functions. \\
 
 \item Numerical evaluations. The code uses stochastic gradient; I have therefore fixed the random seed (line 2 in \verb{demo.m{), to make sure 
 you get the same output every time you run the code. Please do the following comparisons. Report each in a table. I made the tables for you,
@@ -158,7 +161,7 @@ This way we can at least compare all the methods by computational effort, since 
 with your choice of layer size, layer number, and objective function, that beats the best test error you have seen so far, and report the error and the setup. Keep in mind the hidden layers don't need to be all the same size. \\
 \end{itemize}
 
-\noindent I have chosen the number of iterations to be 50.  There are two lessons to be learned.  The first is that optimizing for the different objective functions produce similar results.  Optimizing on cross-entropy (CE) seemed to produce the best test outcomes.The second is that adding more layers or increasing layer size on a neural network can lead to overfitting of the training data and thus, a bump in test error.  Finally, the final notion that must be considered is training time, which must be carefully traded-off with model performance.\\
+\noindent I have chosen the number of iterations to be 50.  There are several lessons to be learned.  The first is that optimizing for the different objective functions produce similar results.  Optimizing on cross-entropy (CE) seemed to produce the best test outcomes.  The second is that overfitting the model on the training data set is quite easy and will bump up the test error.  Overfitting can come from adding more layers, increasing layer size, or performing a large number of iterations.  The final consideration should take into account model training/compuation time as a legitimate trade-off versus model performance and it may be possible to train a well-performing model without constructing an extravagantly large neural net. \\
 
 \begin{tabular}{|c|c|}\hline
  & CE \\ \hline
@@ -211,11 +214,12 @@ f(r) = \sum \ln(\nu + r_i^2)
 
 \begin{tabular}{|c|c|c|c|}\hline
  & MSE & huber MSE & student MSE \\ \hline
- \verb{params.Nh = [], 0% contaminated{  21 \%&21.5\% & & \\ \hline
-  \verb{params.Nh = [], 1% contaminated{  & & & \\ \hline
- \verb{params.Nh = [], 5% contaminated{  & & & \\ \hline
-  \verb{params.Nh = [], 10% contaminated{  & & & \\ \hline
- \verb{params.Nh = [], 25% contaminated{  & & & \\ \hline 
+ \verb{params.Nh = [], 0% contaminated{  &21 \%&31.3\% & 27.5 \% \\ \hline
+  \verb{params.Nh = [], 1% contaminated{  &20.6 &32 &31.05 \\ \hline
+ \verb{params.Nh = [], 5% contaminated{  & 28.1& 33.35& \\ \hline
+  \verb{params.Nh = [], 10% contaminated{  & & 37.4&28.75 \\ \hline
+ \verb{params.Nh = [], 25% contaminated{  & 30.45& 27.55
+& \\ \hline 
  \verb{params.Nh = 100, 0% contaminated{  &5.4 & 6.15& \\ \hline
   \verb{params.Nh = 100, 1% contaminated{  & & & \\ \hline
  \verb{params.Nh = 100, 5% contaminated{  & & & \\ \hline
@@ -224,7 +228,15 @@ f(r) = \sum \ln(\nu + r_i^2)
 \end{tabular}\\\\
  
 
-\item Did the robust measures help? How did they fare compared to the ML estimators for contaminated data? 
+\item Did the robust measures help? How did they fare compared to the ML estimators for contaminated data? \\
+
+For the Huber loss, I chose $\delta = .25$.  For the student t, I decided on $\nu=1$.\\
+
+\noindent
+The robust measures, did not seem to help, but I did not sufficiently tune the parameters with respect to these alternative mean squared error formulations - whether it be the "delta" parameter for the Huber loss or the degrees of freedom $\nu$ parameter for the student t log-likelihood. \\
+
+\noindent
+While more investigation needs to be done with regards to this experiment, it is evident that the MSE losses do not perform as well as the Cross-Entropy and Negative Log-Likelihood formulations.
 
 \end{enumerate}
 
