@@ -27,14 +27,16 @@
 
 \newcommand{\prox}{\mathrm{prox}}
 \newcommand{\logit}{\mathrm{logit}}
-
+\newcommand{\tr}{\mathrm{tr}}
 
 \usepackage{amsmath,epsfig,amssymb}
+\usepackage{listings}
+
 %\input{macros}
 %\input{macros2}
 
 \begin{document}
-{\Large Name:}  \\
+{\Large Name:}  John Min, jcm2199 \\
 \begin{center}
 \Large COMS 4772 \hskip 2in Homework Set 4
 \end{center}
@@ -54,6 +56,8 @@ E\left((X-EX)(X-EX)^T\right) = E(XX^T) - EX(EX)^T.
 \]
 The quantity on the left hand side is the variance-covariance matrix for $X$, which we will call $V(X)$.\\ \\
 
+\noindent
+Solution: \\
 \begin{align*}
 V(X) &= E\bigg[ \Big(X - E(X) \Big) \Big(X-E(X) \Big)^\top \bigg] \\
 	&= E\bigg[XX^\top - E(X)X^\top - X \big[E(X)\big]^\top + E(X) \big[E(X)\big]^\top \bigg] \\
@@ -67,11 +71,30 @@ V(X) &= E\bigg[ \Big(X - E(X) \Big) \Big(X-E(X) \Big)^\top \bigg] \\
 V(AX) = A(V(X))A^T.
 \]
 
+\noindent
+Solution: \\
+\begin{align*}
+V(AX) &= E\bigg[ \Big(AX - E(AX) \Big) \Big(AX-E(AX) \Big)^\top \bigg] \\
+	&= E\bigg[ AXX^\top A^\top - E\Big(AX\Big)X^\top A^\top - AX E\Big(X^\top A^\top \Big) + E\Big(AX \Big) E\Big(X^\top A^\top \Big) \\
+	&= E\Big(AXX^\top A^\top \Big) + E\Big(AX \Big) E \Big(X^\top A^\top \Big) \\
+	&= A E\Big(XX^\top \Big) A^\top + A E \Big(X \Big) E\Big(X^\top \Big) A^\top \\
+	&= A \big[V(X) \big] A^\top
+\end{align*} \\
+
+
 \item Show that 
 \[
 E(\|X\|^2) = \mbox{trace}(V(X))  + \|EX\|^2.
 \]
 \null\\
+
+\noindent
+Solution: \\
+\begin{align*}
+E \Big( ||X^2|| \Big) &= E \Big (X^\top X \Big) \\
+|| E(X) || ^2 &= \big[ E(X) \big]^\top E(X) \\
+\tr \Big( V(X) \Big ) &= tr \Big( E(XX^\top) - E(X) E(X)^\top \Big)
+\end{align*} \\
 
 \item Solve the stochastic optimization problem 
 \[
@@ -147,4 +170,24 @@ increases with iterations. Can this strategy beat the fixed batch size strategy,
 \end{enumerate}
 
 \end{enumerate}
+
+\renewcommand*\familydefault{\ttdefault}
+\lstset{
+language=Python,
+showstringspaces=true,
+formfeed=\newpage,
+tabsize=4,
+commentstyle=\itshape,
+basicstyle=\ttfamily,
+morekeywords={models, lambda, forms}
+}
+ 
+\newcommand{\code}[2]{
+\hrulefill
+\subsection*{#1}
+\lstinputlisting{#2}
+\vspace{2em}
+}
+\lstinputlisting{./logistic_regression.py}
+
 \end{document}
