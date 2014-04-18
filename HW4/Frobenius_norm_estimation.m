@@ -11,7 +11,7 @@ A = rand(n, p);
 %A = randi5, n, p);
 %A = randn(n, p);
 
-norm_Frobenius = norm(A, 'fro')
+norm_Frobenius = norm(A, 'fro')^2
 
 
 
