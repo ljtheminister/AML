@@ -1,11 +1,6 @@
-\documentclass[12pt]{amsart}
+\documentclass[12pt]{article}
 
-\pagestyle{empty}
-\textwidth 7.5in
-\textheight 9in
-\oddsidemargin -0.3in
-\evensidemargin -0.2in
-\topmargin -0.2in
+\usepackage[margin=0.5in]{geometry}
 
 \newcommand{\norm}[1]{\Vert #1 \Vert}
 \newcommand{\Rn}{\R^n}
@@ -91,18 +86,30 @@ E(\|X\|^2) = \mbox{trace}(V(X))  + \|EX\|^2.
 \noindent
 Solution: \\
 \begin{align*}
-E \Big( ||X^2|| \Big) &= E \Big (X^\top X \Big) \\
+E \big( ||X^2|| \big) &= E \big (X^\top X \big) \\
 || E(X) || ^2 &= \big[ E(X) \big]^\top E(X) \\
-\tr \Big( V(X) \Big ) &= tr \Big( E(XX^\top) - E(X) E(X)^\top \Big)
-\end{align*} \\
+\tr \Big( V(X) \Big ) &= tr \Big( E(XX^\top) - E(X) E(X)^\top \Big) = E \big(X^\top X \big) -\big[ E(X) \big]^\top E(X)\\
+\end{align*}
+Clearly, the above statement is true.\\
 
 \item Solve the stochastic optimization problem 
 \[
 \min_y E\|X - y\|_2^2,
 \]
 where $X$ is a random vector, and the expectation is taken with respect to $X$.
-What is the minimizer? What's the minimum value? \\\\
+What is the minimizer? What's the minimum value? \\
 
+\noindent
+$\min_y E\|X - y\|_2^2 = \min_y E_x [X^\top X - 2X^\top y + y^\top y] = \min_y E[X^\top X] - 2y^\top E[X] + y^\top y$ \\
+
+
+\noindent
+The minimizer is the mean of $X$. \\
+$\frac{\partial}{\partial y} \min_y E\|X - y\|_2^2 = 0 \Rightarrow y^* = E[X]$.\\  
+
+\noindent
+Let's substitute $y^*$ for $y$.  The minimum value of the cost function is the variance of $X$. \\
+$E\|X - y^*\|_2^2 = E[X^\top X] - [E(X)]^2 = Var(X)$.  \\
 \end{enumerate}
 
 \item Frobenius norm estimation. Suppose we want to estimate 
@@ -118,10 +125,22 @@ E \|Aw\|^2 = \|A\|_F^2.
 \]
 Prove that your condition works. \\
 
+\noindent
+$E \|Aw\|^2 = \tr \Big(V(Aw)\Big) + \|E Aw \|^2 = E [Aw w^\top A^\top ] - E[Aw] \cdot E[Aw] = E[Aw w^\top A^\top] = \tr(A^\top A) $\\
+Since $\tr(A^\top A) = \tr(AA^\top)$, we have $A \cdot E[w w^\top] A^\top = \tr(A A^\top)$. \\
+Therefore, $E[w w^\top] = I_k$ \\
+
+
 \item What's a simple example of a distribution that satisfies the condition you derived above? \\
+
+\noindent
+We can sample from a uniform distribution on the unit n-ball.\\
 
 \item Explain how you can put the relationship you found to practical use to estimate $\|A\|_F^2$ for a large $A$. 
 In particular, you must explain how to estimate $\|A\|_F^2$ more or less accurately, depending on the need. \\
+
+\noindent
+Sample some $w$'s uniformly on the unit n-ball and then compute $\|Aw\|^2$.  Estimate $\frac{1}{N} \sum_{i=1}^N \|Aw\|^2$\\
 
 \item Test out the idea in Matlab. Generate a random matrix $A$, maybe 500 x 1000. Compute its frobenius norm
 using \verb{norm(A, 'fro'){ command.  Compare this to the result of your approach. Are they close? Is your approach faster? \\
