@@ -18,7 +18,7 @@ X = data['X']
 X = scale(X)
 N, K  = X.shape
 p = .9 # 90-10 train-test split
-L = LogisticSGD(X, y, 0.9, 1e-5, 0.01, 1)
+L = LogisticSGD(X, y, 0.9, .01, 0.01, 1)
 L.stochastic_gradient_descent()
 
 '''
