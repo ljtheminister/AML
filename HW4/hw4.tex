@@ -1,11 +1,6 @@
-\documentclass[12pt]{amsart}
+\documentclass[12pt]{article}
 
-\pagestyle{empty}
-\textwidth 7.5in
-\textheight 9in
-\oddsidemargin -0.3in
-\evensidemargin -0.2in
-\topmargin -0.2in
+\usepackage[margin=0.5in]{geometry}
 
 \newcommand{\norm}[1]{\Vert #1 \Vert}
 \newcommand{\Rn}{\R^n}
@@ -27,14 +22,17 @@
 
 \newcommand{\prox}{\mathrm{prox}}
 \newcommand{\logit}{\mathrm{logit}}
-
+\newcommand{\tr}{\mathrm{tr}}
 
 \usepackage{amsmath,epsfig,amssymb}
+\usepackage{listings}
+\usepackage[T1]{fontenc}
+\usepackage[scaled]{beramono}
 %\input{macros}
 %\input{macros2}
 
 \begin{document}
-{\Large Name:}  \\
+{\Large Name:}  John Min, jcm2199 \\
 \begin{center}
 \Large COMS 4772 \hskip 2in Homework Set 4
 \end{center}
@@ -54,6 +52,8 @@ E\left((X-EX)(X-EX)^T\right) = E(XX^T) - EX(EX)^T.
 \]
 The quantity on the left hand side is the variance-covariance matrix for $X$, which we will call $V(X)$.\\ \\
 
+\noindent
+Solution: \\
 \begin{align*}
 V(X) &= E\bigg[ \Big(X - E(X) \Big) \Big(X-E(X) \Big)^\top \bigg] \\
 	&= E\bigg[XX^\top - E(X)X^\top - X \big[E(X)\big]^\top + E(X) \big[E(X)\big]^\top \bigg] \\
@@ -67,19 +67,50 @@ V(X) &= E\bigg[ \Big(X - E(X) \Big) \Big(X-E(X) \Big)^\top \bigg] \\
 V(AX) = A(V(X))A^T.
 \]
 
+\noindent
+Solution: \\
+\begin{align*}
+V(AX) &= E\bigg[ \Big(AX - E(AX) \Big) \Big(AX-E(AX) \Big)^\top \bigg] \\
+	&= E\bigg[ AXX^\top A^\top - E\Big(AX\Big)X^\top A^\top - AX E\Big(X^\top A^\top \Big) + E\Big(AX \Big) E\Big(X^\top A^\top \Big) \\
+	&= E\Big(AXX^\top A^\top \Big) + E\Big(AX \Big) E \Big(X^\top A^\top \Big) \\
+	&= A E\Big(XX^\top \Big) A^\top + A E \Big(X \Big) E\Big(X^\top \Big) A^\top \\
+	&= A \big[V(X) \big] A^\top
+\end{align*} \\
+
+
 \item Show that 
 \[
 E(\|X\|^2) = \mbox{trace}(V(X))  + \|EX\|^2.
 \]
-\null\\
+\null
+
+\noindent
+Solution: \\
+\begin{align*}
+E \big( ||X^2|| \big) &= E \big (X^\top X \big) \\
+|| E(X) || ^2 &= \big[ E(X) \big]^\top E(X) \\
+\tr \Big( V(X) \Big ) &= tr \Big( E(XX^\top) - E(X) E(X)^\top \Big) = E \big(X^\top X \big) -\big[ E(X) \big]^\top E(X)\\
+\end{align*}
+Clearly, by doing some addition, the above statement is true.\\
 
 \item Solve the stochastic optimization problem 
 \[
 \min_y E\|X - y\|_2^2,
 \]
 where $X$ is a random vector, and the expectation is taken with respect to $X$.
-What is the minimizer? What's the minimum value? \\\\
+What is the minimizer? What's the minimum value? \\
 
+\noindent
+$\min_y E\|X - y\|_2^2 = \min_y E_x [X^\top X - 2X^\top y + y^\top y] = \min_y E[X^\top X] - 2y^\top E[X] + y^\top y$ \\
+
+
+\noindent
+The minimizer is the mean of $X$. \\
+$\frac{\partial}{\partial y} \min_y E\|X - y\|_2^2 = 0 \Rightarrow y^* = E[X]$.\\  
+
+\noindent
+Let's substitute $y^*$ for $y$.  The minimum value of the cost function is the variance of $X$. \\
+$E\|X - y^*\|_2^2 = E[X^\top X] - [E(X)]^2 = Var(X)$.  \\
 \end{enumerate}
 
 \item Frobenius norm estimation. Suppose we want to estimate 
@@ -95,13 +126,30 @@ E \|Aw\|^2 = \|A\|_F^2.
 \]
 Prove that your condition works. \\
 
+\noindent
+$E \|Aw\|^2 = \tr \Big(V(Aw)\Big) + \|E Aw \|^2 = E [Aw w^\top A^\top ] - E[Aw] \cdot E[Aw] = E[Aw w^\top A^\top] = \tr(A^\top A) $\\
+Since $\tr(A^\top A) = \tr(AA^\top)$, we have $A \cdot E[w w^\top] A^\top = \tr(A A^\top)$. \\
+Therefore, $E[w w^\top] = I_k \Rightarrow \tr \Big(E[w w^\top] \Big) = \tr(I_k) = k \Rightarrow E[w^\top w] = k$ \\
+
+\noindent
+A sufficient condition is that the squared norm of $w$ be $k$, where $k$ is the dimensionality of the vector. \\
+
 \item What's a simple example of a distribution that satisfies the condition you derived above? \\
+
+\noindent
+We can sample from a uniform distribution on the unit n-ball such that $w$ is a unit vector.\\
 
 \item Explain how you can put the relationship you found to practical use to estimate $\|A\|_F^2$ for a large $A$. 
 In particular, you must explain how to estimate $\|A\|_F^2$ more or less accurately, depending on the need. \\
 
+\noindent
+Sample some $w$'s uniformly on the unit n-ball and then compute $\frac{1}{N} \sum_{i=1}^N k\|Aw\|^2$ where $k$ is the dimensionality of vector $w$. Increasing the N will improve the accuracy of the estimation.\\
+
 \item Test out the idea in Matlab. Generate a random matrix $A$, maybe 500 x 1000. Compute its frobenius norm
 using \verb{norm(A, 'fro'){ command.  Compare this to the result of your approach. Are they close? Is your approach faster? \\
+
+\noindent
+With a large enough A, the estimate is very close.  In one example, for $N = 10000$, the estimated squared Frobenius norm is 165,278.7 while the actual value is 166,551, leading to a .7639\% error.  The estimation approach is not faster than calling the Matlab Frobenius norm, but this method appears to scale quite nicely with very large matrices. \\
 
 \end{enumerate}
 
@@ -147,4 +195,24 @@ increases with iterations. Can this strategy beat the fixed batch size strategy,
 \end{enumerate}
 
 \end{enumerate}
+
+\renewcommand*\familydefault{\ttdefault}
+\lstset{
+language=Python,
+showstringspaces=true,
+formfeed=\newpage,
+tabsize=4,
+commentstyle=\itshape,
+basicstyle=\ttfamily,
+morekeywords={models, lambda, forms}
+}
+ 
+\newcommand{\code}[2]{
+\hrulefill
+\subsection*{#1}
+\lstinputlisting{#2}
+\vspace{2em}
+}
+\lstinputlisting{./logistic_sgd.py}
+
 \end{document}
